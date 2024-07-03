@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>限時搶購商品</title>
+    <link rel="stylesheet" th:href="@{/css/seckill.css}" />
+    <link rel="stylesheet" th:href="@{/css/seckill_item.css}" />
+    <script th:if="${item}" type="text/javascript" th:src="@{/js/seckill_item.js}"></script>
+</head>
+<body>
+<div th:if="${error}">
+    <h3 th:text="${error}"></h3>
+</div>
+<div class="item" th:if="${item}">
+    <img th:src="${item.imgUrl}" />
+    <div>
+        <div class="itemInfo">
+            <h3 th:text="${item.title}"></h3>
+            <p>
+                限時搶購價：<span class="seckillPrice" th:text="${item.seckillPrice}"></span>
+            </p>
+            <p>
+                原價：<span class="price" th:text="${item.price}"></span>
+            </p>
+            <p>
+                剩餘庫存：<span class="inventory" th:text="${item.inventory}"></span>
+            </p>
+        </div>
+        <div class="endTime">
+            <p id="countDown"></p>
+        </div>
+        <div class="beginSeckill">
+            <form th:action="@{/seckill/exec}" method="post">
+                <input type="hidden" name="id" th:value="${item.id}">
+                <input type="hidden" name="mobile" th:value="${mobile}">
+                <input type="submit" id="seckillBtn" value="開始限時搶購">
+            </form>
+        </div>
+        <script>
+            window.onload = function () {
+                countDown('[[${item.startTime}}]]', '[[${item.endTime}}]]');
+            }
+        </script>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品限時搶購</title>
+    <link rel="stylesheet" th:href="@{/css/seckill.css}" />
+    <link rel="stylesheet" th:href="@{/css/seckill_list.css}" />
+
+    <script type="text/javascript" th:src="@{/js/seckill_list.js}"></script>
+</head>
+<body>
+<div class="items">
+    <h3>限時搶購商品列表</h3>
+    <div class="item" th:each="item: ${items}" >
+        <figure>
+            <img th:src="${item.imgUrl}">
+            <figcaption th:text="${item.title}"></figcaption>
+        </figure>
+        <div class="info">
+            <p>原價：<span class="price" th:text="${item.price}"></span></p>
+            <p>限時搶購價：<span class="seckillPrice" th:text="${item.price}"></span></p>
+            <p>庫存：<span class="inventory"
+                          th:text="${item.inventory}"></span></p>
+            <p>開始時間：<span class="startTime"
+                              th:text="${#temporals.format(item.startTime, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+            <p>結束時間：<span class="endTime"
+                              th:text="${#temporals.format(item.endTime, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+        </div>
+        <div class="buy">
+            <a href="javascript:;" th:onclick="'confirmPhone(' + ${item.id} + ')'" >
+                <button th:if="${#temporals.createNow() < item.endTime}">立即搶購</button>
+                <button th:if="${#temporals.createNow() >= item.endTime}" disabled>限時搶購已經結束</button>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- 彈出訊息方塊，提示使用者輸入電話 -->
+<div id="messageBox" class="messageBox" style="display: none">
+    <h2>請輸入您的電話號碼：</h2>
+    <form id="theForm" method="post" onsubmit="return beginSeckill();">
+        <div class="mobile">
+            <input id="mobile" type="text" name="mobile">
+        </div>
+        <div class="btn">
+            <input class="ok" type="submit" value="確定">
+            <button class="cancel" onclick="return handleCancel();">取消</button>
+            <input id="itemId" type="hidden">
+        </div>
+    </form>
+</div>
+</body>
+</html>
